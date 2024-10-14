@@ -7,20 +7,29 @@
 </head>
 <body>
     <p>Rock Paper Scissors</p>
+
     <button onclick="playGame('rock');">Rock</button>
+
     <button onclick="playGame('paper');">Paper</button>
+
     <button onclick="playGame('scissors');">Scissors</button>
+
+    <p class="js-score"></p>
+
     <button onclick="
         localStorage.removeItem('score'); //se borran los datos persistentes pero no el objeto score que ya está cargado
-        score.wins = 0;
+        score.wins = 0; //por eso lo ponemos a 0
         score.losses = 0;
         score.ties = 0;
+        updateScoreElement();
     ">Reset</button>
 
     <script>
-        console.log(document.querySelector('button').innerHTML);
 
-        const score = JSON.parse(localStorage.getItem('score')) || {wins: 0, losses: 0, ties: 0}; //si la 1a opcion devuelve false genera un objecto con los valores a 0
+        let score = JSON.parse(localStorage.getItem('score')) || {wins: 0, losses: 0, ties: 0}; //si la primera opcion devuelve false genera un objeto con los valores a 0
+
+        updateScoreElement();
+
 
         function playGame(playerMove) {
             const computerMove = pickComputerMove();
@@ -77,8 +86,15 @@
 
             localStorage.setItem('score', JSON.stringify(score)); //pasar el objeto a String para guardarlo en localStorage
 
+            updateScoreElement();
+
             alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.
             Wins: ${score.wins}. Losses: ${score.losses}. Ties: ${score.ties}`);
+        }
+
+
+        function updateScoreElement() {
+            document.querySelector('.js-score').innerHTML = `Wins: ${score.wins}. Losses: ${score.losses}. Ties: ${score.ties}`;
         }
 
 
