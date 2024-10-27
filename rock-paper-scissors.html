@@ -4,9 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
+    <style>
+        body {
+            background-color: rgb(25, 25, 25);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            color: white;
+        }
+
+        #title {
+            font-size: 40px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <p>Rock Paper Scissors</p>
+    <p id="title">Rock Paper Scissors</p>
 
     <button onclick="playGame('rock');">Rock</button>
 
@@ -14,6 +27,8 @@
 
     <button onclick="playGame('scissors');">Scissors</button>
 
+    <p class="js-result"></p>
+    <p class="js-moves"></p>
     <p class="js-score"></p>
 
     <button onclick="
@@ -24,11 +39,31 @@
         updateScoreElement();
     ">Reset</button>
 
+    <button onclick="autoPlay()">AUTOPLAY</button>
+
+
     <script>
 
+        let isAutoPlaying = false;
+        let intervalId;
         let score = JSON.parse(localStorage.getItem('score')) || {wins: 0, losses: 0, ties: 0}; //si la primera opcion devuelve false genera un objeto con los valores a 0
 
         updateScoreElement();
+
+        function autoPlay() {
+            if(!isAutoPlaying) {
+                intervalId = setInterval(function() {
+                    //const computerMove = pickComputerMove();
+                    playGame(pickComputerMove());
+                }, 1000);
+                isAutoPlaying = true;
+            } else {
+                clearInterval(intervalId);
+                isAutoPlaying = false;
+            }
+            
+            
+        }
 
 
         function playGame(playerMove) {
@@ -87,9 +122,11 @@
             localStorage.setItem('score', JSON.stringify(score)); //pasar el objeto a String para guardarlo en localStorage
 
             updateScoreElement();
+            document.querySelector('.js-result').innerHTML = result;
+            document.querySelector('.js-moves').innerHTML = `Your move: ${playerMove} - Computer's move: ${computerMove}`;
 
-            alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.
-            Wins: ${score.wins}. Losses: ${score.losses}. Ties: ${score.ties}`);
+            // alert(`You picked ${playerMove}. Computer picked ${computerMove}. ${result}.
+            // Wins: ${score.wins}. Losses: ${score.losses}. Ties: ${score.ties}`);
         }
 
 
